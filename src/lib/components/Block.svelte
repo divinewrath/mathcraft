@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { Solver } from "$lib/questions/Solver";
+
     type Operands = {
         leftOperand: number;
         rightOperand: number;
@@ -19,27 +21,15 @@
     }>();
 
     let solved = $state(false);
+    const solver = new Solver();
     const currentOperands = initialOperands;
 
-    function getOperatorSymbol(fn: Action): '×' | '÷' {
-        // @ts-ignore
-        return fn.op === '×' ? '×' : '÷';
-    }
-
     function getQuestionText(): string {
-        const operator = getOperatorSymbol(action);
-        if (action.name === 'div') {
-            return `${currentOperands.leftOperand * currentOperands.rightOperand} ${operator} ${currentOperands.rightOperand}`;
-        }
-
-        return `${currentOperands.leftOperand} ${operator} ${currentOperands.rightOperand}`;
+        return `${currentOperands.leftOperand} ${currentOperands.op} ${currentOperands.rightOperand}`;
     }
 
     function calculateAnswer(): number {
-        if (action.name === 'div') {
-            return currentOperands.leftOperand;
-        }
-        return action(currentOperands);
+        return solver.solve(currentOperands.leftOperand, currentOperands.rightOperand, currentOperands.action);
     }
 
     function handleClick() {

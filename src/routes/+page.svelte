@@ -3,6 +3,8 @@
     import Inventory from '$lib/components/Inventory.svelte';
     import QuestionModal from '$lib/components/QuestionModal.svelte';
     import Block from "$lib/components/Block.svelte";
+    import { MulGenerator } from '$lib/questions/MulGenerator';
+    import { DivGenerator } from "$lib/questions/DivGenerator";
 
     type Operands = {
         leftOperand: number;
@@ -10,7 +12,8 @@
     };
 
     type ActionFn = (operands: Operands) => number;
-    type BlockComponentInstance = InstanceType<typeof Block>;
+    // type BlockComponentInstance = InstanceType<typeof Block>;
+    type BlockComponentInstance = Block;
 
     interface BlockData {
         id: symbol;
@@ -31,6 +34,8 @@
         errorMessage?: string;
     } | null>(null);
 
+    let generators = {'mul': new MulGenerator(10), 'div': new DivGenerator(10)};
+
     let isStarted = $state<boolean>(false);
     let gameBlocks = $state<BlockData[]>([]);
     let gameOver = $state(false);
@@ -44,31 +49,25 @@
         return { leftOperand: num1, rightOperand: num2 };
     }
 
-    function mul(operands: Operands): number {
-        return operands.leftOperand * operands.rightOperand;
-    }
-    // @ts-ignore
-    mul.op = '×';
-
-    function div(operands: Operands): number {
-        return operands.leftOperand;
-    }
-    // @ts-ignore
-    div.op = '÷';
-
-    function getRandomSolver(): ActionFn {
-        return Math.random() > 0.5 ? mul : div;
+    function getRandomGenerator(): any {
+        return Math.random() > 0.5 ? generators.mul : generators.div;
     }
 
     function initializeBlocks() {
         const newBlocks: BlockData[] = [];
         const numberOfBlocks = 25;
         for (let i = 0; i < numberOfBlocks; i++) {
-            newBlocks.push({
+            let blockData = {
                 id: Symbol(`block-${i}`),
-                operands: generateOperands(),
-                action: getRandomSolver(),
-            });
+            };
+
+            let questionData = getRandomGenerator().generate();
+            questionData = {
+                operands: { ...questionData },
+                action: questionData.action,
+            }
+
+            newBlocks.push({...blockData, ...questionData});
         }
         gameBlocks = newBlocks;
     }
@@ -173,7 +172,7 @@
         {#if showModal && activeQuestionData && !gameOver && !gameWon}
             <QuestionModal
                     question={activeQuestionData.question}
-                    errorMessage={activeQuestionData.errorMessage}
+                    errorMessage={activeQuestionData?.errorMessage}
                     onAnswer={handleAnswerAttempt}
                     onClose={closeModal}
             />
