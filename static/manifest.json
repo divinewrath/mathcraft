@@ -2,11 +2,12 @@
   "short_name": "MathCraft",
   "name": "MathCraft",
   "start_url": "/",
+  "id": "/",
   "icons": [
     {
-      "src": "favicon.png",
+      "src": "icon-1024x1024.png",
       "type": "image/png",
-      "sizes": "128x128"
+      "sizes": "1024x1024"
     }
   ],
   "background_color": "#3367D6",

@@ -132,6 +132,7 @@
 
 <svelte:head>
     <title>MathCraft</title>
+    <link rel="manifest" href="/manifest.json">
     <link href="https://fonts.cdnfonts.com/css/minecraftia" rel="stylesheet">
 </svelte:head>
 
