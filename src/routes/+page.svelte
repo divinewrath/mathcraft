@@ -182,7 +182,7 @@
         font-family: 'Minecraftia', sans-serif;
         background-color: #8ecae6;
         padding: 20px;
-        min-height: 100vh;
+        min-height: 100dvh;
         display: flex;
         flex-direction: column;
         align-items: center;
