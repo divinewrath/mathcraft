@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { version, dev } from '$app/environment';
     import BlockGrid from '$lib/components/BlockGrid.svelte';
     import Inventory from '$lib/components/Inventory.svelte';
     import QuestionModal from '$lib/components/QuestionModal.svelte';
@@ -131,6 +132,7 @@
 </script>
 
 <main>
+    <div class="version-display">{dev ? 'dev-' : ''}{version}</div>
     <h1>MathCraft</h1>
     {#if !isStarted}
         <button class="start-button" onclick={startGame}>Rozpocznij Grę</button>
@@ -180,10 +182,22 @@
         font-family: 'Minecraftia', sans-serif;
         background-color: #8ecae6;
         padding: 20px;
-        min-height: 100vh;
+        min-height: 100dvh;
         display: flex;
         flex-direction: column;
         align-items: center;
+        position: relative;
+    }
+
+    .version-display {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        font-size: 0.8em;
+        color: #2c3e50;
+        background-color: rgba(255, 255, 255, 0.5);
+        padding: 2px 5px;
+        border-radius: 3px;
     }
 
     h1 {
