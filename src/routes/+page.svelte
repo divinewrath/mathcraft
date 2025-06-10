@@ -6,6 +6,7 @@
     import Block from "$lib/components/Block.svelte";
     import { MulGenerator } from '$lib/questions/MulGenerator';
     import { DivGenerator } from "$lib/questions/DivGenerator";
+    import Rotozoomer from '$lib/components/Rotozoomer.svelte';
 
     type Operands = {
         leftOperand: number;
@@ -133,7 +134,13 @@
 
 <main>
     <div class="version-display">{dev ? 'dev-' : ''}{version}</div>
-    <h1>MathCraft</h1>
+    <Rotozoomer>
+        {#snippet children({ transformStyle })}
+            <h1 style:transform={transformStyle}>MathCraft</h1>
+<!--            <h1>MathCraft</h1>-->
+        {/snippet}
+    </Rotozoomer>
+<!--    <img src="/icon-1024x1024.png" alt="MathCraft Logo" class="logo-image"/>-->
     {#if !isStarted}
         <button class="start-button" onclick={startGame}>Rozpocznij Grę</button>
     {:else}
@@ -200,11 +207,53 @@
         border-radius: 3px;
     }
 
+    .logo-image {
+        width: 40dvh;
+        height: 40dvh;
+        margin-bottom: 20px;
+        object-fit: contain;
+    }
+
     h1 {
         color: #2c3e50;
         text-shadow: 2px 2px #ffffff;
         font-size: 3em;
-        margin-bottom: 20px;
+        margin-bottom: 30px;
+        /*animation-name: rotozoom;*/
+        /*animation-duration: 10s;*/
+        /*animation-iteration-count: infinite;*/
+        /*animation-timing-function: linear;*/
+        display: inline-block;
+        /*will-change: transform, opacity, color;*/
+    }
+
+    /* Definicja animacji @keyframes dla rotozoom */
+    @keyframes rotozoom {
+        0% {
+            transform: scale(0.7) rotate(0deg);
+            opacity: 0.6;
+            color: #2c3e50;
+        }
+        25% {
+            transform: scale(1.1) rotate(15deg); /* Mniejszy kąt rotacji dla subtelniejszego efektu */
+            opacity: 1;
+            color: #e67e22; /* Pomarańczowy akcent */
+        }
+        50% {
+            transform: scale(0.9) rotate(0deg);
+            opacity: 0.8;
+            color: #2980b9; /* Niebieski akcent */
+        }
+        75% {
+            transform: scale(1.2) rotate(-15deg); /* Rotacja w przeciwnym kierunku */
+            opacity: 1;
+            color: #f1c40f; /* Żółty akcent */
+        }
+        100% {
+            transform: scale(0.7) rotate(0deg);
+            opacity: 0.6;
+            color: #2c3e50; /* Powrót do stanu początkowego */
+        }
     }
 
     .start-button {
