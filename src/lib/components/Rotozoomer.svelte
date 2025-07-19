@@ -1,5 +1,7 @@
 <script lang="ts">
-    let { children } = $props();
+    let {
+        title
+    } = $props();
 
     let step = $state(0);
 
@@ -34,6 +36,16 @@
     };
 </script>
 
-<div onclick={handlePause}>
-    {@render children?.({ transformStyle: transformStyle })}
+<div onclick={handlePause} onkeyup={handlePause} role="button" tabindex="0">
+    <h1 style:transform={transformStyle}>{title}</h1>
 </div>
+
+<style>
+    h1 {
+        color: #2c3e50;
+        text-shadow: 2px 2px #ffffff;
+        font-size: 3em;
+        margin-bottom: 30px;
+        display: inline-block;
+    }
+</style>

@@ -1,3 +1,5 @@
+import type { QuestionData } from "$lib/types";
+
 export abstract class AbstractGenerator {
     protected readonly limit: number;
 
@@ -12,4 +14,6 @@ export abstract class AbstractGenerator {
     protected randomInt(limit: number): number {
         return Math.floor(Math.random() * limit) + 1;
     }
+
+    public abstract generate(): QuestionData;
 }
