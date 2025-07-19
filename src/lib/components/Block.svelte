@@ -1,61 +1,56 @@
 <script lang="ts">
     import { Solver } from "$lib/questions/Solver";
+    import type {BlockData, QuestionData} from "$lib/types";
 
-    type Operands = {
-        leftOperand: number;
-        rightOperand: number;
+    type BlockProps = {
+        blockItem: BlockData,
+        onBlockClick: (details: { question: string; answer: number; blockId: symbol }) => void;
     };
 
-    type Action = (operands: Operands) => number;
-
     const {
-        initialOperands,
-        action,
-        blockId,
+        blockItem,
         onBlockClick
-    } = $props<{
-        initialOperands: Operands;
-        action: Action;
-        blockId: symbol;
-        onBlockClick: (details: { question: string; answer: number; blockId: symbol }) => void;
-    }>();
+    }: BlockProps = $props();
 
-    let solved = $state(false);
+    let question = blockItem.questionData;
+
     const solver = new Solver();
-    const currentOperands = initialOperands;
+
+    function getOpSymbol(operation: string) {
+        let map = new Map([['div', '÷'], ['mul', '×']]);
+
+        return map.get(operation);
+    }
 
     function getQuestionText(): string {
-        return `${currentOperands.leftOperand} ${currentOperands.op} ${currentOperands.rightOperand}`;
+        let op = getOpSymbol(question.operation) ?? '?';
+
+        return `${question.operands.leftOperand} ${op} ${question.operands.rightOperand}`;
     }
 
     function calculateAnswer(): number {
-        return solver.solve(currentOperands.leftOperand, currentOperands.rightOperand, currentOperands.action);
+        return solver.solve(question.operands.leftOperand, question.operands.rightOperand, question.operation);
     }
 
     function handleClick() {
-        if (!solved) {
+        if (!blockItem.markedAsSolved) {
             onBlockClick({
                 question: getQuestionText(),
                 answer: calculateAnswer(),
-                blockId: blockId
+                blockId: blockItem.id
             });
         }
     }
-
-    export function markAsSolved() {
-        solved = true;
-    }
-
 </script>
 
 <button
         class="block"
-        aria-label={solved ? "Blok rozwiązany" : `Pytanie: ${getQuestionText()}`}
+        aria-label={blockItem.markedAsSolved ? "Blok rozwiązany" : `Pytanie: ${getQuestionText()}`}
         onclick={handleClick}
-        class:solved={solved}
-        disabled={solved}
+        class:solved={blockItem.markedAsSolved}
+        disabled={blockItem.markedAsSolved}
 >
-    {solved ? '✓' : '?'}
+    {blockItem.markedAsSolved ? '✓' : '?'}
 </button>
 
 <style>

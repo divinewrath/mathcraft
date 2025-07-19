@@ -3,23 +3,25 @@
 
     const {
         question,
-        errorMessage,
         onAnswer,
         onClose
     } = $props<{
-        question: string;
-        errorMessage?: string;
+        question: string | undefined;
         onAnswer: (userAnswer: string) => void;
         onClose: () => void;
     }>();
 
     let userAnswer = $state('');
     let answerInputRef: HTMLInputElement | undefined = $state();
+    let errorMessage: string | null = $state(null);
 
     function submitAnswer() {
-        onAnswer(userAnswer);
-        if (errorMessage) {
-           userAnswer = '';
+        try {
+            onAnswer(userAnswer);
+            errorMessage = null;
+        } catch (e: any) {
+            userAnswer = '';
+            errorMessage = e.message;
         }
     }
 
@@ -29,8 +31,14 @@
         }
     }
 
-    function handleModalContentClick(event: MouseEvent) {
+    function handleModalContentClick(event: MouseEvent|KeyboardEvent) {
         event.stopPropagation();
+    }
+
+    function handleKeyUp(event: KeyboardEvent) {
+        if (event.key === 'Escape') {
+            onClose();
+        }
     }
 
     $effect(() => {
@@ -43,11 +51,10 @@
             });
         }
     });
-
 </script>
 
-<div class="modal-overlay" onclick={onClose}>
-    <div class="modal-content" onclick={handleModalContentClick}>
+<div class="modal-overlay" onclick={onClose} onkeyup={handleKeyUp} tabindex="0" role="button">
+    <div class="modal-content" onclick={handleModalContentClick} onkeyup={handleModalContentClick} tabindex="0" role="button">
         <p>{question} = ?</p>
         <input
             type="number"
