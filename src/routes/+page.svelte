@@ -27,7 +27,7 @@
     {#if !gameState.isStarted}
         <h1>MathCraft</h1>
         <button class="button start-button" onclick={startGame}>Rozpocznij Grę</button>
-        <button class="button time-limit-button" onclick={startTimeLimitGame}>Gra na czas</button>
+        <button class="button time-limit-button" style="display:none" onclick={startTimeLimitGame}>Gra na czas</button>
     {:else}
         <Back backHandler={() => { gameState.isStarted = false; }} />
         <Inventory diamonds={gameState.diamonds} hearts={gameState.hearts} />
